@@ -7,7 +7,7 @@
         xmlns:vm="clr-namespace:SportsClubManagement.ViewModels"
         xmlns:views="clr-namespace:SportsClubManagement.Views"
         mc:Ignorable="d"
-        Title="Quản lý Câu lạc bộ Thể thao" Height="700" Width="1200" WindowStartupLocation="CenterScreen">
+        Title="Quản lý Câu lạc bộ Thể thao" Height="700" Width="1200" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
             <views:DashboardView />
@@ -76,41 +76,45 @@
 
             <!-- Sidebar Navigation -->
             <Border Grid.Column="0" Background="#F5F5F5" BorderBrush="#E0E0E0" BorderThickness="0,0,1,0">
-                <StackPanel Margin="0,20,0,0">
-                    <!-- Navigation Buttons -->
-                    <Button Content="📊 Dashboard" Command="{Binding NavigateToDashboardCommand}" 
-                            Margin="10" Padding="12,10" HorizontalContentAlignment="Left" 
-                            Background="Transparent" Foreground="#333" FontSize="13" Cursor="Hand"/>
-                    
-                    <Button Content="👤 Trang cá nhân" Command="{Binding NavigateToProfileCommand}" 
-                            Margin="10" Padding="12,10" HorizontalContentAlignment="Left" 
-                            Background="Transparent" Foreground="#333" FontSize="13" Cursor="Hand"/>
-                    
-                    <Button Content="👥 Các team của tôi" Command="{Binding NavigateToTeamsCommand}" 
-                            Margin="10" Padding="12,10" HorizontalContentAlignment="Left" 
-                            Background="Transparent" Foreground="#333" FontSize="13" Cursor="Hand"/>
-                    
-                    <Button Content="📅 Lịch tập" Command="{Binding NavigateToPersonalScheduleCommand}"
-                            Margin="10" Padding="12,10" HorizontalContentAlignment="Left" 
-                            Background="Transparent" Foreground="#333" FontSize="13" Cursor="Hand"/>
-                    
-                    <Button Content="🔔 Thông báo" 
-                            Margin="10" Padding="12,10" HorizontalContentAlignment="Left" 
-                            Background="Transparent" Foreground="#999" FontSize="13" IsEnabled="False"/>
-                    
-                    <!-- Admin Section -->
-                    <Separator Margin="10,20,10,10"/>
-                    <TextBlock Text="ADMIN" Margin="10,0,10,10" Foreground="#999" FontSize="11" FontWeight="Bold"/>
-                    
-                    <Button Content="👨‍💼 Quản lý User" Command="{Binding NavigateToAdminCommand}" 
-                            Margin="10" Padding="12,10" HorizontalContentAlignment="Left" 
-                            Background="Transparent" Foreground="#333" FontSize="13" Cursor="Hand"/>
-                </StackPanel>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Margin="0,20,0,0">
+                        <!-- Navigation Buttons -->
+                        <Button Content="📊 Dashboard" Command="{Binding NavigateToDashboardCommand}" 
+                                Margin="10" Padding="12,10" HorizontalContentAlignment="Left" 
+                                Background="Transparent" Foreground="#333" FontSize="13" Cursor="Hand"/>
+                        
+                        <Button Content="👤 Trang cá nhân" Command="{Binding NavigateToProfileCommand}" 
+                                Margin="10" Padding="12,10" HorizontalContentAlignment="Left" 
+                                Background="Transparent" Foreground="#333" FontSize="13" Cursor="Hand"/>
+                        
+                        <Button Content="👥 Team của tôi" Command="{Binding NavigateToTeamsCommand}" 
+                                Margin="10" Padding="12,10" HorizontalContentAlignment="Left" 
+                                Background="Transparent" Foreground="#333" FontSize="13" Cursor="Hand"/>
+                        
+                        <Button Content="📅 Lịch tập" Command="{Binding NavigateToPersonalScheduleCommand}"
+                                Margin="10" Padding="12,10" HorizontalContentAlignment="Left" 
+                                Background="Transparent" Foreground="#333" FontSize="13" Cursor="Hand"/>
+                        
+                        <Button Content="🔔 Thông báo" 
+                                Margin="10" Padding="12,10" HorizontalContentAlignment="Left" 
+                                Background="Transparent" Foreground="#999" FontSize="13" IsEnabled="False"/>
+                        
+                        <!-- Admin Section -->
+                        <Separator Margin="10,20,10,10"/>
+                        <TextBlock Text="ADMIN" Margin="10,0,10,10" Foreground="#999" FontSize="11" FontWeight="Bold"/>
+                        
+                        <Button Content="👨‍💼 Quản lý User" Command="{Binding NavigateToAdminCommand}" 
+                                Margin="10" Padding="12,10" HorizontalContentAlignment="Left" 
+                                Background="Transparent" Foreground="#333" FontSize="13" Cursor="Hand"/>
+                    </StackPanel>
+                </ScrollViewer>
             </Border>
 
             <!-- Content Area -->
             <Border Grid.Column="1" Background="White">
-                <ContentControl Content="{Binding CurrentView}" Margin="30,20"/>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ContentControl Content="{Binding CurrentView}" Margin="30,20"/>
+                </ScrollViewer>
             </Border>
         </Grid>
     </Grid>

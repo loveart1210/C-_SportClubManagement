@@ -56,7 +56,14 @@ namespace SportsClubManagement.ViewModels
 
             NavigateToDashboardCommand = new RelayCommand(o => CurrentView = new DashboardViewModel());
             NavigateToTeamsCommand = new RelayCommand(o => CurrentView = new TeamsViewModel());
-            NavigateToPersonalScheduleCommand = new RelayCommand(o => CurrentView = new PersonalScheduleViewModel());
+            NavigateToPersonalScheduleCommand = new RelayCommand(o => {
+                var vm = new PersonalScheduleViewModel();
+                if (o != null && int.TryParse(o.ToString(), out int index))
+                {
+                    vm.SelectedTabIndex = index;
+                }
+                CurrentView = vm;
+            });
             NavigateToProfileCommand = new RelayCommand(o => CurrentView = new ProfileViewModel());
             NavigateToAdminCommand = new RelayCommand(o => CurrentView = new UserManagementViewModel());
             LogoutCommand = new RelayCommand(ExecuteLogout);

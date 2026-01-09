@@ -14,6 +14,8 @@ namespace SportsClubManagement.ViewModels
         private ObservableCollection<TeamDisplayModel> _allTeams;
         private TeamDisplayModel _selectedTeam;
         private string _searchText;
+        private string _newTeamName = string.Empty;
+        private string _newTeamDescription = string.Empty;
 
         public ObservableCollection<TeamDisplayModel> Teams
         {
@@ -37,11 +39,25 @@ namespace SportsClubManagement.ViewModels
             }
         }
 
+        public string NewTeamName
+        {
+            get => _newTeamName;
+            set => SetProperty(ref _newTeamName, value);
+        }
+
+        public string NewTeamDescription
+        {
+            get => _newTeamDescription;
+            set => SetProperty(ref _newTeamDescription, value);
+        }
+
         public ICommand ViewTeamCommand { get; }
+        public ICommand CreateTeamCommand { get; }
 
         public TeamsViewModel()
         {
             ViewTeamCommand = new RelayCommand(ViewTeam, CanViewTeam);
+            CreateTeamCommand = new RelayCommand(CreateTeam, CanCreateTeam);
             LoadTeamData();
         }
 
@@ -105,6 +121,50 @@ namespace SportsClubManagement.ViewModels
                 // This would normally navigate; for now we can raise an event
                 OnTeamSelected?.Invoke(this, SelectedTeam.Team);
             }
+        }
+
+        private bool CanCreateTeam(object parameter)
+        {
+            return !string.IsNullOrWhiteSpace(NewTeamName);
+        }
+
+        private void CreateTeam(object parameter)
+        {
+            var currentUser = DataService.Instance.CurrentUser;
+            if (currentUser == null) return;
+
+            // Create new team
+            var newTeam = new Team
+            {
+                Name = NewTeamName,
+                Description = NewTeamDescription,
+                CreatedDate = DateTime.Now,
+                Balance = 0
+            };
+            DataService.Instance.Teams.Add(newTeam);
+
+            // Add current user as Founder
+            var teamMember = new TeamMember
+            {
+                UserId = currentUser.Id,
+                TeamId = newTeam.Id,
+                Role = "Founder",
+                JoinDate = DateTime.Now
+            };
+            DataService.Instance.TeamMembers.Add(teamMember);
+
+            // Save changes
+            DataService.Instance.Save();
+
+            // Clear form
+            NewTeamName = string.Empty;
+            NewTeamDescription = string.Empty;
+
+            // Reload teams
+            LoadTeamData();
+
+            System.Windows.MessageBox.Show($"Team '{newTeam.Name}' đã được tạo thành công!", "Thành công",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
         }
 
         public event EventHandler<Team> OnTeamSelected;

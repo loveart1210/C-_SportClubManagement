@@ -4,11 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:SportsClubManagement.ViewModels"
+             xmlns:conv="clr-namespace:SportsClubManagement.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="900">
     <UserControl.DataContext>
         <vm:PersonalScheduleViewModel />
     </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <conv:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
+    </UserControl.Resources>
 
     <Grid Margin="20">
         <Grid.RowDefinitions>
@@ -16,9 +21,48 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Lịch Tập Cá Nhân" FontSize="24" FontWeight="Bold" Foreground="#1976D2" Margin="0,0,0,20"/>
+        <DockPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock Text="Lịch Tập Cá Nhân" FontSize="24" FontWeight="Bold" Foreground="#1976D2" VerticalAlignment="Center"/>
+            
+            <!-- Filters (only visible/relevant for the second tab) -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Visibility="{Binding SelectedTabIndex, Converter={StaticResource IntToVisibilityConverter}, ConverterParameter=1}">
+                <StackPanel Margin="5,0,0,0">
+                    <TextBlock Text="Trạng thái" FontSize="11" Foreground="Gray" Margin="2,0,0,2"/>
+                    <ComboBox ItemsSource="{Binding StatusOptions}" SelectedItem="{Binding FilterStatus}" Width="100" VerticalContentAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Margin="5,0,0,0">
+                    <TextBlock Text="Ngày" FontSize="11" Foreground="Gray" Margin="2,0,0,2"/>
+                    <ComboBox ItemsSource="{Binding DayOptions}" SelectedItem="{Binding FilterDay}" Width="65" VerticalContentAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Margin="5,0,0,0">
+                    <TextBlock Text="Tháng" FontSize="11" Foreground="Gray" Margin="2,0,0,2"/>
+                    <ComboBox ItemsSource="{Binding MonthOptions}" SelectedItem="{Binding FilterMonth}" Width="65" VerticalContentAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Margin="5,0,0,0">
+                    <TextBlock Text="Năm" FontSize="11" Foreground="Gray" Margin="2,0,0,2"/>
+                    <ComboBox ItemsSource="{Binding YearOptions}" SelectedItem="{Binding FilterYear}" Width="80" VerticalContentAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Margin="5,0,0,0">
+                    <TextBlock Text="Buổi tập" FontSize="11" Foreground="Gray" Margin="2,0,0,2"/>
+                    <ComboBox ItemsSource="{Binding SessionNameOptions}" SelectedItem="{Binding FilterSessionName}" Width="110" VerticalContentAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Margin="5,0,0,0">
+                    <TextBlock Text="Môn" FontSize="11" Foreground="Gray" Margin="2,0,0,2"/>
+                    <ComboBox ItemsSource="{Binding SubjectNameOptions}" SelectedItem="{Binding FilterSubjectName}" Width="110" VerticalContentAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Margin="5,0,0,0">
+                    <TextBlock Text="Bắt đầu" FontSize="11" Foreground="Gray" Margin="2,0,0,2"/>
+                    <ComboBox ItemsSource="{Binding StartTimeOptions}" SelectedItem="{Binding FilterStartTime}" Width="80" VerticalContentAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Margin="5,0,0,0">
+                    <TextBlock Text="Kết thúc" FontSize="11" Foreground="Gray" Margin="2,0,0,2"/>
+                    <ComboBox ItemsSource="{Binding EndTimeOptions}" SelectedItem="{Binding FilterEndTime}" Width="80" VerticalContentAlignment="Center"/>
+                </StackPanel>
+                <Button Content="Clear" Command="{Binding ClearFiltersCommand}" Margin="10,0,0,0" Padding="10,5" VerticalAlignment="Bottom" Background="#9E9E9E" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+            </StackPanel>
+        </DockPanel>
 
-        <TabControl Grid.Row="1">
+        <TabControl Grid.Row="1" SelectedIndex="{Binding SelectedTabIndex}">
             <!-- Subjects Tab -->
             <TabItem Header="Môn tập cá nhân">
                 <Grid Margin="10">
@@ -30,7 +74,7 @@
                     <!-- List Subjects -->
                     <DockPanel Grid.Column="0" Margin="0,0,20,0">
                         <TextBlock DockPanel.Dock="Top" Text="Danh sách môn tập" FontWeight="SemiBold" Margin="0,0,0,10"/>
-                        <ListBox ItemsSource="{Binding Subjects}" SelectedItem="{Binding SelectedSubject}" BorderBrush="#DDD">
+                        <ListBox ItemsSource="{Binding Subjects}" SelectedItem="{Binding SelectedSubject}" BorderBrush="#DDD" HorizontalContentAlignment="Stretch">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="5">
@@ -42,8 +86,13 @@
                                             <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
                                             <TextBlock Text="{Binding Description}" FontSize="12" Foreground="Gray"/>
                                         </StackPanel>
-                                        <Button Grid.Column="1" Content="Xóa" Command="{Binding DataContext.RemoveSubjectCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
-                                                CommandParameter="{Binding}" Padding="5,2" Background="#FF5252" Foreground="White" BorderThickness="0"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Button Content="✏️ Sửa" Command="{Binding DataContext.EditSubjectCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}" Padding="8,4" Margin="0,0,5,0"
+                                                    Background="#2196F3" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DataContext.RemoveSubjectCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                                    CommandParameter="{Binding}" Padding="8,4" Background="#FF5252" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+                                        </StackPanel>
                                     </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
@@ -69,7 +118,7 @@
             </TabItem>
 
             <!-- Schedule/Calendar Tab -->
-            <TabItem Header="Lịch tập">
+            <TabItem Header="Lịch tập cá nhân">
                 <Grid Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="300"/>
@@ -97,12 +146,11 @@
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Grid.Column="0" Margin="0,0,5,0">
                                         <TextBlock Text="Bắt đầu" FontSize="11"/>
-                                        <!-- Note: Using simple binding for demo, ideally use TimePicker -->
-                                        <TextBox Text="{Binding NewSessionStart, StringFormat=HH:mm}" Padding="5"/> 
+                                        <TextBox Text="{Binding NewSessionStart}" Padding="5"/> 
                                     </StackPanel>
                                     <StackPanel Grid.Column="1" Margin="5,0,0,0">
                                         <TextBlock Text="Kết thúc" FontSize="11"/>
-                                        <TextBox Text="{Binding NewSessionEnd, StringFormat=HH:mm}" Padding="5"/>
+                                        <TextBox Text="{Binding NewSessionEnd}" Padding="5"/>
                                     </StackPanel>
                                 </Grid>
                                 
@@ -124,23 +172,53 @@
                         <TextBlock DockPanel.Dock="Top" Text="{Binding SelectedDate, StringFormat='Danh sách buổi tập - {0:dd/MM/yyyy}'}" 
                                    FontSize="18" FontWeight="SemiBold" Margin="0,0,0,15"/>
                         
-                        <DataGrid ItemsSource="{Binding Sessions}" AutoGenerateColumns="False" CanUserAddRows="False" 
-                                  HeadersVisibility="Column" GridLinesVisibility="Horizontal" Background="White" BorderBrush="#EEE">
+                        <DataGrid ItemsSource="{Binding SessionViewItems}" AutoGenerateColumns="False" CanUserAddRows="False" 
+                                  HeadersVisibility="Column" GridLinesVisibility="Horizontal" Background="White" BorderBrush="#EEE"
+                                  CanUserResizeColumns="True" SelectionMode="Single">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Giờ" Binding="{Binding StartTime, StringFormat=HH:mm}" Width="60" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="Tên buổi tập" Binding="{Binding Name}" Width="*" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="Môn" Binding="{Binding SubjectId}" Width="100" IsReadOnly="True"/> <!-- Ideally convert ID to Name -->
-                                <DataGridTextColumn Header="Ghi chú" Binding="{Binding Note}" Width="*" IsReadOnly="True"/>
-                                <DataGridTemplateColumn Width="70">
+                                <DataGridTextColumn Header="Ngày" Binding="{Binding Session.StartTime, StringFormat=dd/MM/yyyy}" Width="85" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Bắt đầu" Binding="{Binding Session.StartTime, StringFormat=HH:mm}" Width="65" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Kết thúc" Binding="{Binding Session.EndTime, StringFormat=HH:mm}" Width="65" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Tên buổi tập" Binding="{Binding Session.Name}" Width="*" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Môn" Binding="{Binding SubjectName}" Width="100" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Trạng thái" Binding="{Binding Status}" Width="100" IsReadOnly="True">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Status}" Value="Hoàn thành">
+                                                    <Setter Property="Foreground" Value="#4CAF50"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="Quá hạn">
+                                                    <Setter Property="Foreground" Value="#F44336"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTemplateColumn Header="Điểm danh" Width="100">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Button Content="Xóa" Command="{Binding DataContext.RemoveSessionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
-                                                    CommandParameter="{Binding}" Background="Transparent" Foreground="Red" BorderThickness="0"/>
+                                            <Button Content="Điểm danh" 
+                                                    Command="{Binding DataContext.AttendSessionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                                    CommandParameter="{Binding}"
+                                                    Background="{Binding AttendanceColor}"
+                                                    IsEnabled="{Binding IsAttendanceEnabled}"
+                                                    Padding="10,5" BorderBrush="#CCC" BorderThickness="1" Cursor="Hand"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="50">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="🗑️" Command="{Binding DataContext.RemoveSessionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                                    CommandParameter="{Binding}" Background="Transparent" Foreground="Red" BorderThickness="0" FontSize="14" Cursor="Hand"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
+
                     </DockPanel>
                 </Grid>
             </TabItem>

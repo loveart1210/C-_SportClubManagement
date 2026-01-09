@@ -5,6 +5,8 @@ using System.Windows.Input;
 using SportsClubManagement.Helpers;
 using SportsClubManagement.Models;
 using SportsClubManagement.Services;
+using System.IO;
+using Microsoft.Win32;
 
 namespace SportsClubManagement.ViewModels
 {
@@ -85,6 +87,7 @@ namespace SportsClubManagement.ViewModels
         public ICommand SaveCommand { get; }
         public ICommand CancelCommand { get; }
         public ICommand ChangePasswordCommand { get; }
+        public ICommand SelectAvatarCommand { get; }
 
         public ProfileViewModel()
         {
@@ -96,6 +99,7 @@ namespace SportsClubManagement.ViewModels
             SaveCommand = new RelayCommand(SaveProfile);
             CancelCommand = new RelayCommand(o => LoadUserData());
             ChangePasswordCommand = new RelayCommand(ChangePassword, CanChangePassword);
+            SelectAvatarCommand = new RelayCommand(SelectAvatar);
         }
 
         private void LoadUserData()
@@ -155,6 +159,49 @@ namespace SportsClubManagement.ViewModels
             return !string.IsNullOrWhiteSpace(CurrentPassword) && 
                    !string.IsNullOrWhiteSpace(NewPassword) && 
                    !string.IsNullOrWhiteSpace(ConfirmPassword);
+        }
+
+        private void SelectAvatar(object obj)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image files (*.png;*.jpeg;*.jpg)|*.png;*.jpeg;*.jpg|All files (*.*)|*.*";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    string sourcePath = openFileDialog.FileName;
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(sourcePath);
+                    
+                    // Determine project directory
+                    string appDir = AppDomain.CurrentDomain.BaseDirectory;
+                    // Usually: bin\Debug\netX.X-windows\
+                    // We want: SportsClubManagement\Data\Avatar
+                    
+                    DirectoryInfo dirInfo = new DirectoryInfo(appDir);
+                    // Navigate up to SportsClubManagement folder
+                    string projectDir = dirInfo.Parent.Parent.Parent.FullName;
+                    string avatarDir = Path.Combine(projectDir, "Data", "Avatar");
+                    
+                    if (!Directory.Exists(avatarDir))
+                    {
+                        Directory.CreateDirectory(avatarDir);
+                    }
+                    
+                    string destPath = Path.Combine(avatarDir, fileName);
+                    File.Copy(sourcePath, destPath, true);
+                    
+                    // Update current view model path
+                    // Use relative path or absolute path? 
+                    // To be safe for display, use absolute path.
+                    AvatarPath = destPath;
+                    
+                    Message = "Avatar đã được chọn. Hãy bấm 'Lưu thay đổi' để hoàn tất.";
+                }
+                catch (Exception ex)
+                {
+                    Message = "Lỗi khi thay đổi avatar: " + ex.Message;
+                }
+            }
         }
 
         private void ChangePassword(object obj)

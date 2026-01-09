@@ -1,0 +1,14 @@
+1. Dashboard
+- Teams: Hiển thị tổng số team hiện có trên hệ thống
+    + Đối với admin: Hiển thị tổng số team hiện có trên hệ thống
+    + Đối với user: Hiển thị tổng số team hiện có trên hệ thống mà user có quyền truy cập (Bao gồm team mà user là admin và team mà user là member)
+- Sessions: Hiển thị tổng số buổi tập trong tháng
+
+
+Tất cả các tiêu chí lọc phải được cập nhật theo thời gian thực khi có bất kỳ thay đổi nào mà không cần phải đăng xuất rồi vào lại chương trình.
+Nguyên nhân tôi có yêu cầu này vì khi tôi bổ sung thêm lịch tập vào năm 2029, tiêu chí "Năm" không hề cập nhật thêm tiêu chí lọc vào năm 2029.
+
+Bên cạnh đó, chức năng điểm danh cũng cần được cập nhật theo thời gian thực khi có bất kỳ thay đổi nào mà không cần phải đăng xuất rồi vào lại chương trình.
+Nguyên nhân tôi có yêu cầu này vì khi tôi bổ sung thêm buổi tập vào lúc 17:30 (lúc tôi bổ sung là 17:29), thì sau khi thời gian đã điểm tới 17:30, tôi không thể thực hiện điểm danh, và các trạng thái của điểm danh cũng không hoạt động.
+
+Hơn nữa, khi mới vào tab "Lịch tập cá nhân", tôi muốn hiển thị toàn bộ danh sách buổi tập trong tương lai (kể cả buổi tập sẽ bắt đầu sau hàng chục năm nữa) mà không cần phải chọn tháng trong tab lọc. Lúc này chương trình sẽ tự động chọn "Trạng thái" là "Chưa bắt đầu" khi mới vào tab "Lịch tập cá nhân". Và khi bấm "Clear" trong tab lọc, tôi muốn chương trình tự động chọn "Trạng thái" là "Chưa bắt đầu".

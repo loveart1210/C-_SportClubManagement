@@ -57,8 +57,12 @@ namespace SportsClubManagement.ViewModels
 
                 TotalTeams = userTeams.Count;
 
+                var now = DateTime.Now;
                 var userSessions = DataService.Instance.Sessions
-                    .Where(s => userTeams.Contains(s.TeamId))
+                    .Where(s => (s.UserId == currentUser.Id || (s.TeamId != null && userTeams.Contains(s.TeamId))) 
+                                && s.StartTime >= now 
+                                && s.StartTime.Month == now.Month 
+                                && s.StartTime.Year == now.Year)
                     .Count();
 
                 UpcomingSessions = userSessions;

@@ -33,6 +33,7 @@ namespace SportsClubManagement.Services
         {
             Load();
             if (!Users.Any()) SeedData();
+            else EnsureDemoUsers();
         }
 
         public void Load()
@@ -187,6 +188,55 @@ namespace SportsClubManagement.Services
             Notifications.Add(notif);
 
             Save();
+        }
+
+        private void EnsureDemoUsers()
+        {
+            bool changed = false;
+            
+            if (!Users.Any(u => u.Username == "admin"))
+            {
+                Users.Add(new User
+                {
+                    Username = "admin",
+                    Password = "admin123",
+                    FullName = "Admin System",
+                    Role = "Admin",
+                    Email = "admin@sports.club",
+                    BirthDate = new DateTime(1990, 1, 1)
+                });
+                changed = true;
+            }
+
+            if (!Users.Any(u => u.Username == "user1"))
+            {
+                Users.Add(new User
+                {
+                    Username = "user1",
+                    Password = "user123",
+                    FullName = "Nguyễn Văn A",
+                    Role = "User",
+                    Email = "user1@sports.club",
+                    BirthDate = new DateTime(2000, 5, 15)
+                });
+                changed = true;
+            }
+
+            if (!Users.Any(u => u.Username == "user2"))
+            {
+                Users.Add(new User
+                {
+                    Username = "user2",
+                    Password = "user123",
+                    FullName = "Trần Văn B",
+                    Role = "User",
+                    Email = "user2@sports.club",
+                    BirthDate = new DateTime(2001, 3, 20)
+                });
+                changed = true;
+            }
+
+            if (changed) Save();
         }
 
         public bool CanManageTeam(User user, Team team)

@@ -30,7 +30,7 @@
                     <StackPanel>
                         <TextBlock Text="👥 Teams" FontSize="16" FontWeight="Bold" Foreground="#1976D2" Margin="0,0,0,10"/>
                         <TextBlock Text="{Binding TotalTeams}" FontSize="32" FontWeight="Bold" Foreground="#0D47A1"/>
-                        <TextBlock Text="Các team của bạn" Foreground="#666" FontSize="12"/>
+                        <TextBlock Text="Team bạn tham gia" Foreground="#666" FontSize="12"/>
                     </StackPanel>
                 </Border>
                 
@@ -39,7 +39,7 @@
                     <StackPanel>
                         <TextBlock Text="📅 Sessions" FontSize="16" FontWeight="Bold" Foreground="#7B1FA2" Margin="0,0,0,10"/>
                         <TextBlock Text="{Binding UpcomingSessions}" FontSize="32" FontWeight="Bold" Foreground="#4A148C"/>
-                        <TextBlock Text="Buổi tập sắp tới" Foreground="#666" FontSize="12"/>
+                        <TextBlock Text="Buổi tập sắp tới trong tháng" Foreground="#666" FontSize="12"/>
                     </StackPanel>
                 </Border>
                 
@@ -57,9 +57,12 @@
             <TextBlock Text="Hành động nhanh" FontSize="16" FontWeight="Bold" Foreground="#333" Margin="0,40,0,15"/>
             <StackPanel Orientation="Horizontal">
                 <Button Content="➕ Tạo team mới" Padding="12,10" Background="#4CAF50" 
-                        Foreground="White" FontWeight="SemiBold" Margin="0,0,10,0" Cursor="Hand"/>
-                <Button Content="📋 Xem lịch" Padding="12,10" Background="#2196F3" 
-                        Foreground="White" FontWeight="SemiBold" Cursor="Hand"/>
+                        Foreground="White" FontWeight="SemiBold" Margin="0,0,10,0" Cursor="Hand"
+                        Command="{Binding DataContext.NavigateToTeamsCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                <Button Content="📋 Lịch tập của tôi" Padding="12,10" Background="#2196F3" 
+                        Foreground="White" FontWeight="SemiBold" Cursor="Hand"
+                        Command="{Binding DataContext.NavigateToPersonalScheduleCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        CommandParameter="1"/>
             </StackPanel>
         </StackPanel>
     </Grid>

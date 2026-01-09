@@ -46,6 +46,7 @@ namespace SportsClubManagement.Models
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public string Note { get; set; }
+        public bool IsAttended { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
     }
 

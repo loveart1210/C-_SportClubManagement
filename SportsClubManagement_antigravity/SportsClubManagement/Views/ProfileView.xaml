@@ -10,24 +10,18 @@
         <vm:ProfileViewModel />
     </UserControl.DataContext>
 
-    <Grid>
-        <StackPanel Width="500" HorizontalAlignment="Left">
+    <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+        <StackPanel Width="500">
             <!-- Title -->
             <TextBlock Text="Thông tin cá nhân" FontSize="24" FontWeight="Bold" 
-                       Foreground="#1976D2" Margin="0,0,0,30"/>
+                       Foreground="#1976D2" Margin="0,0,0,15" HorizontalAlignment="Center"/>
 
             <!-- Avatar Section -->
-            <Grid Margin="0,0,0,30">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                
-                <Image Source="{Binding AvatarPath}" Width="100" Height="100" 
-                       Grid.Column="0" Stretch="UniformToFill" Margin="0,0,20,0"/>
-                
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                    <Button Content="Thay đổi Avatar" Padding="10,8" Cursor="Hand"/>
+            <Grid Margin="0,0,0,15" HorizontalAlignment="Center">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="{Binding AvatarPath}" Width="200" Height="200" 
+                        Grid.Column="0" Stretch="UniformToFill" Margin="0,0,0,15"/>
+                    <Button Content="Thay đổi Avatar" Command="{Binding SelectAvatarCommand}" Padding="10,8" Cursor="Hand"/>
                 </StackPanel>
             </Grid>
 
@@ -55,7 +49,7 @@
             <TextBlock Text="{Binding Message}" Foreground="#4CAF50" Margin="0,0,0,15" FontSize="12"/>
 
             <!-- Buttons -->
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,0">
                 <Button Content="💾 Lưu thay đổi" Command="{Binding SaveCommand}" 
                         Padding="15,10" Background="#4CAF50" Foreground="White" 
                         FontWeight="SemiBold" Margin="0,0,10,0" Cursor="Hand"/>
